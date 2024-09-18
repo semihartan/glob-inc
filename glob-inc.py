@@ -22,15 +22,21 @@ def create_dir_if_not_exists(path):
     if not os.path.exists(path):
         os.mkdir(path)
 
+# Utility function to remove a node matching a criteria specified with predicate.
+def remove_node(dom: Node, predicate): 
+    for child in dom.childNodes:
+        if predicate(child):
+            dom.removeChild(child)
+    for child in dom.childNodes:
+        remove_node(child)
+
 # The Python's built-in XML parser parses white-spaces into parse tree. We don't want them because when rebuilding
 # XML file, they causes extra whitespace, newlines. 
 # This function recursively traverses the DOM, and remove whitespace nodes.
-def clean_dom(dom: Node): 
-    for child in dom.childNodes:
-        if child.nodeName == '#text' and child.nodeValue.startswith(('\n', '\t', ' ')):
-            dom.removeChild(child)
-    for child in dom.childNodes:
-        clean_dom(child)
+def clean_dom(dom: Node):
+    criteria = lambda child : child.nodeName == '#text' and child.nodeValue.startswith(('\n', '\t', ' '))
+    remove_node(dom, criteria)
+
 
 def check_core(itemDefinitionGroup, type, path):
     childItems = itemDefinitionGroup.getElementsByTagName(type)

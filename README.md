@@ -44,6 +44,12 @@ You can also limit the patching process to specific architectures, such as `x86`
 > glob-inc --path "Your path" -c -p x86
 ```
 
+Unpatching can be done using the `-u, --unpatch` option. It unpatches for all the architectures.
+
+```
+> glob-inc -u
+```
+
 ## Note
 
 Visual Studio may reset the patched MSBuild files after an update. Therefore, it's recommended to re-run this script whenever you update Visual Studio.

@@ -106,6 +106,19 @@ def patch_files():
             xml = dom.toprettyxml(indent='  ').replace('<?xml version="1.0" ?>', "")
             f.write(xml)
 
+def unptach_files():
+    for i, file_name in enumerate(NECCESSARY_FILES): 
+        # If toolset_common is patched, skip
+        if check_flags[i]:
+            continue 
+
+        file_path = os.path.join(MSBUILD_VC_PATH, file_name)
+        with open(file_path, mode="r+", encoding='utf-8') as f:
+            dom = xml_doms[i]
+            project = dom.getElementsByTagName('Project')[0]
+            remove_item_def_group(project)
+            xml = dom.toprettyxml(indent='  ').replace('<?xml version="1.0" ?>', "")
+            f.write(xml)
 
 def create_directories():
     sub_dirs = ['']

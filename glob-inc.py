@@ -16,6 +16,12 @@ SUB_DIRS = ['include\\', 'lib\\x86\\', 'lib\\x64\\', 'lib\\arm\\', 'lib\\arm64' 
 
 FULL_PATHS = []
 
+
+# Utility function to create directories if they don't exist.
+def create_dir_if_not_exists(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+
 # The Python's built-in XML parser parses white-spaces into parse tree. We don't want them because when rebuilding
 # XML file, they causes extra whitespace, newlines. 
 # This function recursively traverses the DOM, and remove whitespace nodes.
@@ -74,10 +80,6 @@ def patch_files():
             xml = dom.toprettyxml(indent='  ').replace('<?xml version="1.0" ?>', "")
             f.write(xml)
 
-# Utility function to create directories if they don't exist.
-def create_dir_if_not_exists(path):
-    if not os.path.exists(path):
-        os.mkdir(path)
 
 def create_directories():
     sub_dirs = ['']
@@ -109,7 +111,7 @@ def main():
     arg_parser.add_argument('-c', '--create', help="Create the directories according to the recommended structure if they doesn't exist.", action='store_true', default=False)
     
     arg_parser.add_argument('-p', '--platform', help="The platform(s) for which the patching will be performed.", type=str, default='x86', choices=['x86', 'x86-32', 'x86-64', 'arm', 'arm32', 'arm64'])
-    args = arg_parser.parse_args(['-c', '-p', 'arm64'])
+    args = arg_parser.parse_args(['-c', 'False', '-p', 'arm64'])
     
     patch_doms = []
 

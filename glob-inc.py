@@ -62,7 +62,7 @@ def remove_item_def_group(dom):
 
 def get_vs_install_dir():
     completion = subprocess.run('"C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -property installationPath', stdout=subprocess.PIPE)
-    return completion.stdout.decode()
+    return completion.stdout.decode().strip()
 
 def check_core(itemDefinitionGroup, type, path):
     childItems = itemDefinitionGroup.getElementsByTagName(type)
@@ -100,7 +100,7 @@ def check_patch_status():
 
 def patch_files():
     for i, file_name in enumerate(NECCESSARY_FILES): 
-        # If toolset_common is patched, skip
+        
         if check_flags[i]:
             continue 
 
@@ -113,18 +113,15 @@ def patch_files():
             f.write(xml)
 
 def unptach_files():
-    for i, file_name in enumerate(NECCESSARY_FILES): 
-        # If toolset_common is patched, skip
+    for i, file_name in enumerate(NECCESSARY_FILES):
         if check_flags[i]:
-            continue 
-
-        file_path = os.path.join(MSBUILD_VC_PATH, file_name)
-        with open(file_path, mode="r+", encoding='utf-8') as f:
-            dom = xml_doms[i]
-            project = dom.getElementsByTagName('Project')[0]
-            remove_item_def_group(project)
-            xml = dom.toprettyxml(indent='  ').replace('<?xml version="1.0" ?>', "")
-            f.write(xml)
+            file_path = os.path.join(MSBUILD_VC_PATH, file_name)
+            with open(file_path, mode="w+", encoding='utf-8') as f:
+                dom = xml_doms[i]
+                project = dom.getElementsByTagName('Project')[0]
+                remove_item_def_group(project)
+                xml = dom.toprettyxml(indent='  ').replace('<?xml version="1.0" ?>', "")
+                f.write(xml)
 
 def create_directories():
     sub_dirs = ['']
@@ -164,7 +161,6 @@ def main():
     arg_parser.add_argument('-c', '--create', help="Create the directories according to the recommended structure if they doesn't exist.", action='store_true', default=False)
     
     arg_parser.add_argument('-p', '--platform', help="The platform(s) for which the patching will be performed.", type=str, default='x86', choices=['x86', 'x86-32', 'x86-64', 'arm', 'arm32', 'arm64'])
-    args = arg_parser.parse_args(['-c', 'False', '-p', 'arm64'])
 
     arg_parser.add_argument('-u', '--unpatch', help="Unpatch the files patched previously.", action='store_true', default=False)
     
@@ -183,11 +179,11 @@ def main():
         create_directories()
 
     if check_patch_status():
+        if args.unpatch:
+            unptach_files()
+            return
         print("The patch is already done.")
         return
-    
-    if args.unpatch:
-        unptach_files()
     
     patch_files()
     

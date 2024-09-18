@@ -1,4 +1,5 @@
 import os
+import subprocess
 import argparse
 from xml.dom.minidom import *
 
@@ -57,6 +58,10 @@ def remove_item_def_group(dom):
             return True
         return False 
     remove_node(dom, criteria)
+
+def get_vs_install_dir():
+    completion = subprocess.run('"C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -property installationPath')
+    return completion.stdout
 
 def check_core(itemDefinitionGroup, type, path):
     childItems = itemDefinitionGroup.getElementsByTagName(type)

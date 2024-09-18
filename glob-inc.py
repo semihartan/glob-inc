@@ -4,7 +4,7 @@ import argparse
 from xml.dom.minidom import *
 
 VS_INSTALL_PATH = None
-MSBUILD_VC_PATH =  "\\MSBuild\\Microsoft\\VC\\v170"
+MSBUILD_VC_PATH =  "MSBuild\\Microsoft\\VC\\v170"
 
 NECCESSARY_FILES = ["Microsoft.Cpp.MSVC.Toolset.Common.props", "Microsoft.Cpp.MSVC.Toolset.Win32.props", "Microsoft.Cpp.MSVC.Toolset.x64.props", "Microsoft.Cpp.MSVC.Toolset.ARM.props", "Microsoft.Cpp.MSVC.Toolset.ARM64.props"]
 
@@ -30,7 +30,7 @@ def remove_node(dom: Node, predicate):
         if predicate(child):
             dom.removeChild(child)
     for child in dom.childNodes:
-        remove_node(child)
+        remove_node(child, predicate)
 
 # The Python's built-in XML parser parses white-spaces into parse tree. We don't want them because when rebuilding
 # XML file, they causes extra whitespace, newlines. 
@@ -148,6 +148,7 @@ def create_directories():
 def main():
     global patch_doms
     global args
+    global MSBUILD_VC_PATH
 
     VS_INSTALL_PATH = get_vs_install_dir()
     if not VS_INSTALL_PATH or VS_INSTALL_PATH == '':
@@ -167,6 +168,8 @@ def main():
 
     arg_parser.add_argument('-u', '--unpatch', help="Unpatch the files patched previously.", action='store_true', default=False)
     
+    args = arg_parser.parse_args()
+
     patch_doms = []
 
     for i, sub_dir in enumerate(SUB_DIRS):

@@ -1,7 +1,3 @@
-Your README is mostly clear and well-structured. However, there are a few minor grammatical improvements and some opportunities to enhance the technical language for better readability and precision. Here's a refined version:
-
----
-
 ## glob-inc (**Glob**ally **Inc**lude)
 
 `glob-inc` is a simple utility designed to patch necessary MSBuild files, allowing you to globally include third-party libraries in all C/C++ projects in Visual Studio.

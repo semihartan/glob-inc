@@ -151,6 +151,8 @@ def main():
     
     arg_parser.add_argument('-p', '--platform', help="The platform(s) for which the patching will be performed.", type=str, default='x86', choices=['x86', 'x86-32', 'x86-64', 'arm', 'arm32', 'arm64'])
     args = arg_parser.parse_args(['-c', 'False', '-p', 'arm64'])
+
+    arg_parser.add_argument('-u', '--unpatch', help="Unpatch the files patched previously.", action='store_true', default=False)
     
     patch_doms = []
 
@@ -167,7 +169,10 @@ def main():
     if check_patch_status():
         print("The patch is already done.")
         return
-
+    
+    if args.unpatch:
+        unptach_files()
+    
     patch_files()
     
 if __name__ == '__main__':

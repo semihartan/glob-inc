@@ -37,6 +37,26 @@ def clean_dom(dom: Node):
     criteria = lambda child : child.nodeName == '#text' and child.nodeValue.startswith(('\n', '\t', ' '))
     remove_node(dom, criteria)
 
+# Remove the ItemDefinitionGroup that we've created.
+def remove_item_def_group(dom):
+    def criteria(child):
+        if child.nodeName == 'ItemDefinitionGroup':
+            clcompiles = child.getElementsByTagName('ClCompile')
+            for clcompile in clcompiles: 
+                aids = clcompile.getElementsByTagName('AdditionalIncludeDirectories')
+                for aid in aids:
+                    if aid.firstChild.nodeName == '#text' and aid.firstChild.nodeValue == FULL_PATHS[0]:
+                        return True
+            links = child.getElementsByTagName('Link')
+            for link in links: 
+                alds = link.getElementsByTagName('AdditionalLibraryDirectories')
+                for ald in alds:
+                    for i in range(1, len(FULL_PATHS)):
+                        if ald.firstChild.nodeName == '#text' and ald.firstChild.nodeValue == FULL_PATHS[i]:
+                            return True
+            return True
+        return False 
+    remove_node(dom, criteria)
 
 def check_core(itemDefinitionGroup, type, path):
     childItems = itemDefinitionGroup.getElementsByTagName(type)

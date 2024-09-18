@@ -3,7 +3,8 @@ import subprocess
 import argparse
 from xml.dom.minidom import *
 
-MSBUILD_VC_PATH =  "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Microsoft\\VC\\v170"
+VS_INSTALL_PATH = None
+MSBUILD_VC_PATH =  "\\MSBuild\\Microsoft\\VC\\v170"
 
 NECCESSARY_FILES = ["Microsoft.Cpp.MSVC.Toolset.Common.props", "Microsoft.Cpp.MSVC.Toolset.Win32.props", "Microsoft.Cpp.MSVC.Toolset.x64.props", "Microsoft.Cpp.MSVC.Toolset.ARM.props", "Microsoft.Cpp.MSVC.Toolset.ARM64.props"]
 
@@ -60,8 +61,8 @@ def remove_item_def_group(dom):
     remove_node(dom, criteria)
 
 def get_vs_install_dir():
-    completion = subprocess.run('"C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -property installationPath')
-    return completion.stdout
+    completion = subprocess.run('"C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -property installationPath', stdout=subprocess.PIPE)
+    return completion.stdout.decode()
 
 def check_core(itemDefinitionGroup, type, path):
     childItems = itemDefinitionGroup.getElementsByTagName(type)
@@ -148,6 +149,13 @@ def main():
     global patch_doms
     global args
 
+    VS_INSTALL_PATH = get_vs_install_dir()
+    if not VS_INSTALL_PATH or VS_INSTALL_PATH == '':
+        print("There is no Visual Studio installation in your system.")
+        return
+    
+    MSBUILD_VC_PATH = os.path.join(VS_INSTALL_PATH, MSBUILD_VC_PATH)
+    
     arg_parser = argparse.ArgumentParser(description="glob-inc - A utility script to patch the neccesary MSBuild files to add third party C/C++ libraries to all the C/C++ projects globally.")
 
     arg_parser.add_argument("--path", type=str, help="The path of the root directory containing include and library directories.", default=ROOT_PATH_NAME)

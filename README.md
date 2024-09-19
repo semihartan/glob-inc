@@ -50,6 +50,12 @@ Unpatching can be done using the `-u, --unpatch` option. It unpatches for all th
 > glob-inc -u
 ```
 
+You can also define an alias for the script in Windows for invoking it anywhere easily. Use the option `-a`.
+
+```
+>glob-inc -a
+```
+
 ## Note
 
 Visual Studio may reset the patched MSBuild files after an update. Therefore, it's recommended to re-run this script whenever you update Visual Studio.

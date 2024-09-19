@@ -21,17 +21,16 @@ SUB_DIRS = ['include', 'lib\\x86', 'lib\\x64', 'lib\\arm', 'lib\\arm64' ]
 FULL_PATHS = []
 
 PLATFORMS_DIRS = { 
-    'x86-32': 'x86',
-    'x86-64': 'x64',
-    'arm32': 'arm',
-    'arm64': 'arm64',
     'x86': 'x86-32',
+    'x86-32': 'x86',
+
     'x64': 'x86-64',
+    'x86-64': 'x64',
+    
+    'arm32': 'arm',
     'arm': 'arm32', 
-    'win32': 'x86',
-    'win32': 'x86-32',
-    'x86-32': 'win32',
-    'x86': 'win32',
+    
+    'arm64': 'arm64', 
 }
 
 PLATFORMS_EXTS = { 

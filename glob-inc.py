@@ -8,7 +8,7 @@ MSBUILD_VC_PATH =  "MSBuild\\Microsoft\\VC\\v170"
 
 NECCESSARY_FILES = ["Microsoft.Cpp.MSVC.Toolset.Common.props", "Microsoft.Cpp.MSVC.Toolset.Win32.props", "Microsoft.Cpp.MSVC.Toolset.x64.props", "Microsoft.Cpp.MSVC.Toolset.ARM.props", "Microsoft.Cpp.MSVC.Toolset.ARM64.props"]
 
-PLATFORMS = ['common', 'x86-32', 'x86-64', 'arm32', 'arm64']
+PLATFORMS = ['noplatform', 'x86-32', 'x86-64', 'arm32', 'arm64']
 
 PATCH_TEMPLATES = [ 
 "<ItemDefinitionGroup><ClCompile><AdditionalIncludeDirectories>{0}</AdditionalIncludeDirectories></ClCompile></ItemDefinitionGroup>", 

@@ -145,8 +145,8 @@ def check_patch_status():
 
 def patch_files():
     for i, file_name in enumerate(NECCESSARY_FILES): 
-        platform = file_name.replace('\\', '/').split(sep='/')[-2].lower()
-        if not platform in requested_platforms and check_flags[i]:
+        ext = file_name.replace('\\', '/').split(sep='/')[-2].lower()
+        if not PLATFORMS_EXTS[ext] in requested_platforms and check_flags[i]:
             continue 
 
         file_path = os.path.join(MSBUILD_VC_PATH, file_name)
@@ -159,8 +159,8 @@ def patch_files():
 
 def unptach_files():
     for i, file_name in enumerate(NECCESSARY_FILES):
-        platform = file_name.split(sep='.')[-2].lower()
-        if platform in requested_platforms and check_flags[i]:
+        ext = file_name.split(sep='.')[-2].lower()
+        if PLATFORMS_EXTS[ext] in requested_platforms and check_flags[i]:
             file_path = os.path.join(MSBUILD_VC_PATH, file_name)
             with open(file_path, mode="w+", encoding='utf-8') as f:
                 dom = xml_doms[i]
@@ -176,8 +176,8 @@ def create_directories():
     create_dir_if_not_exists(FULL_PATHS[0]) 
     for i in range(1, len(FULL_PATHS)):
         path = FULL_PATHS[i]
-        last_part = path.replace('\\', '/').split(sep='/')[-1].lower()
-        if PLATFORMS_DIRS[last_part] in requested_platforms:
+        platform = path.replace('\\', '/').split(sep='/')[-1].lower()
+        if PLATFORMS_DIRS[platform] in requested_platforms:
             create_dir_if_not_exists(path)
     
 def main():

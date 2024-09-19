@@ -16,26 +16,36 @@ PATCH_TEMPLATES = [
 
 ROOT_PATH_NAME = 'C:\\3rdparty\\'
 
-SUB_DIRS = ['include\\', 'lib\\x86\\', 'lib\\x64\\', 'lib\\arm\\', 'lib\\arm64\\' ]
+SUB_DIRS = ['include', 'lib\\x86', 'lib\\x64', 'lib\\arm', 'lib\\arm64' ]
 
 FULL_PATHS = []
+
+PLATFORMS_DIRS = { 
+    'x86-32': 'x86',
+    'x86-64': 'x64',
+    'arm32': 'arm',
+    'arm64': 'arm64',
+    'x86': 'x86-32',
+    'x64': 'x86-64',
+    'arm': 'arm32', 
+}
 
 def get_requested_platforms(platform):
     platforms = PLATFORMS.copy()
     if platform.startswith('x86'):
-        platform.remove('arm32')
-        platform.remove('arm64')
+        platforms.remove('arm32')
+        platforms.remove('arm64')
         if platform.endswith('64'):
-            platform.remove('x86-32')
+            platforms.remove('x86-32')
         if platform.endswith('32'):
-            platform.remove('x86-64')
+            platforms.remove('x86-64')
     elif platform.startswith('arm'):
-        platform.remove('x86-32')
-        platform.remove('x86-64')
+        platforms.remove('x86-32')
+        platforms.remove('x86-64')
         if platform.endswith('64'):
-            platform.remove('arm32')
+            platforms.remove('arm32')
         if platform.endswith('32'):
-            platform.remove('arm64')
+            platforms.remove('arm64')
     return platforms
 
 # Utility function to create directories if they don't exist.
@@ -143,28 +153,22 @@ def unptach_files():
                 f.write(xml)
 
 def create_directories():
-    sub_dirs = ['']
-   
     if not os.path.exists(ROOT_PATH_NAME):
         os.mkdir(ROOT_PATH_NAME)
 
     create_dir_if_not_exists(FULL_PATHS[0])
     platform = args.platform
-    for arch in ['x86', 'arm']:
-        path = None
-        idx_off = 2 if arch == 'arm' else 0
-        if platform.startswith(arch):
-            if not platform.endswith('64'):
-                path = FULL_PATHS[1 + idx_off] 
-                create_dir_if_not_exists(path)
-            if not platform.endswith('32'):
-                path = FULL_PATHS[2 + idx_off]
-                create_dir_if_not_exists(path)      
+
+    for path in FULL_PATHS:
+        last_part = path.split(sep=['\\', '/'])[-1]
+        if PLATFORMS_DIRS[last_part] in requested_platforms:
+            create_dir_if_not_exists(path)
     
 def main():
     global patch_doms
     global args
     global MSBUILD_VC_PATH
+    global requested_platforms
 
     VS_INSTALL_PATH = get_vs_install_dir()
     if not VS_INSTALL_PATH or VS_INSTALL_PATH == '':
@@ -185,6 +189,7 @@ def main():
     
     args = arg_parser.parse_args()
 
+    requested_platforms = get_requested_platforms(args.platform)
     patch_doms = []
 
     for i, sub_dir in enumerate(SUB_DIRS):

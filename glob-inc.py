@@ -149,7 +149,7 @@ def check_patch_status():
 def patch_files():
     for i, file_name in enumerate(NECCESSARY_FILES): 
         ext = file_name.split(sep='.')[-2].lower()
-        if not PLATFORMS_EXTS[ext] in requested_platforms and check_flags[i]:
+        if not PLATFORMS_EXTS[ext] in requested_platforms or check_flags[i]:
             continue 
 
         file_path = os.path.join(MSBUILD_VC_PATH, file_name)

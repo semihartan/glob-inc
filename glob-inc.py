@@ -1,6 +1,7 @@
 import os
 import subprocess
 import argparse
+import winreg
 from xml.dom.minidom import *
 
 VS_INSTALL_PATH = None
@@ -14,6 +15,7 @@ PATCH_TEMPLATES = [
 "<ItemDefinitionGroup><ClCompile><AdditionalIncludeDirectories>{0}</AdditionalIncludeDirectories></ClCompile></ItemDefinitionGroup>", 
 "<ItemDefinitionGroup><Link><AdditionalLibraryDirectories>{0}</AdditionalLibraryDirectories></Link></ItemDefinitionGroup>"]
 
+ALIAS_PATH = 'C:\\cmd-aliases\\'
 ROOT_PATH_NAME = 'C:\\3rdparty\\'
 
 SUB_DIRS = ['include', 'lib\\x86', 'lib\\x64', 'lib\\arm', 'lib\\arm64' ]
@@ -182,7 +184,22 @@ def create_directories():
         platform = path.replace('\\', '/').split(sep='/')[-1].lower()
         if PLATFORMS_DIRS[platform] in requested_platforms:
             create_dir_if_not_exists(path)
+
+def add_alias_windows():
+    create_dir_if_not_exists(ALIAS_PATH)
     
+    env_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Environment', access=winreg.KEY_READ|winreg.KEY_WRITE)
+    path_var = winreg.QueryValueEx(env_key, 'Path')[0]
+    path_var = f"{path_var};{ALIAS_PATH}"
+    winreg.SetValueEx(env_key, 'Path', 0, winreg.REG_EXPAND_SZ,  path_var)
+    env_key.Close()
+
+    bat_path = os.path.join(ALIAS_PATH, 'glob-inc.bat')
+    with open(bat_path, mode='w') as f:
+        bat_content = f'@echo off\r\ncall python {__file__} %*'
+        f.write(bat_content)
+    
+
 def main():
     global patch_doms
     global args
@@ -206,6 +223,8 @@ def main():
 
     arg_parser.add_argument('-u', '--unpatch', help="Unpatch the files patched previously.", action='store_true', default=False)
     
+    arg_parser.add_argument('-a', '--alias', help="Add an alias for the script into Windows' cmd.", action='store_true', default=False)
+    
     args = arg_parser.parse_args()
 
     requested_platforms = get_requested_platforms(args.platform)
@@ -221,6 +240,9 @@ def main():
     if args.create:
         create_directories()
     
+    if args.alias:
+        add_alias_windows()
+
     if args.unpatch:
         if check_patch_status():
             unptach_files()

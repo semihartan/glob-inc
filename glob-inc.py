@@ -199,7 +199,6 @@ def add_alias_windows():
         bat_content = f'@echo off\r\ncall python {__file__} %*'
         f.write(bat_content)
     
-
 def main():
     global patch_doms
     global args
@@ -254,7 +253,6 @@ def main():
         patch_files()
     else:
         print("The patch is already done.")
-        
-    
+         
 if __name__ == '__main__':
     main()

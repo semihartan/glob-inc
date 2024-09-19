@@ -14,7 +14,7 @@ PATCH_TEMPLATES = [
 
 ROOT_PATH_NAME = 'C:\\3rdparty\\'
 
-SUB_DIRS = ['include\\', 'lib\\x86\\', 'lib\\x64\\', 'lib\\arm\\', 'lib\\arm64' ]
+SUB_DIRS = ['include\\', 'lib\\x86\\', 'lib\\x64\\', 'lib\\arm\\', 'lib\\arm64\\' ]
 
 FULL_PATHS = []
 

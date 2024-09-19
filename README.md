@@ -38,10 +38,10 @@ If the specified directories don’t exist, you can instruct the utility to crea
 > glob-inc --path "Your path" -c
 ```
 
-You can also limit the patching process to specific architectures, such as `x86` (both `x86-32` and `x86-64`), `x86-32`, `arm` (both `arm32` and `arm64`), `arm32`, and `arm64`. The script will then patch the relevant MSBuild files and create the necessary directories for the selected architecture(s).
+You can also limit the patching process to specific architectures, such as `all` (all platforms), `x86` (both `x86-32` and `x86-64`), `x86-32`, `arm` (both `arm32` and `arm64`), `arm32`, and `arm64`. The script will then patch the relevant MSBuild files and create the necessary directories for the selected architecture(s).
 
 ```
-> glob-inc --path "Your path" -c -p x86
+> glob-inc --path "Your path" -c -px86
 ```
 
 Unpatching can be done using the `-u, --unpatch` option. It unpatches for all the architectures.

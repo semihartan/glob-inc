@@ -44,6 +44,9 @@ PLATFORMS_EXTS = {
     'arm32': 'arm',
     
     'arm64': 'arm64',
+
+    'common': 'noplatform',
+    'noplatform': 'common',
 }
 
 def get_requested_platforms(platform):

@@ -28,6 +28,10 @@ PLATFORMS_DIRS = {
     'x86': 'x86-32',
     'x64': 'x86-64',
     'arm': 'arm32', 
+    'win32': 'x86',
+    'win32': 'x86-32',
+    'x86-32': 'win32',
+    'x86': 'win32',
 }
 
 def get_requested_platforms(platform):
@@ -129,8 +133,8 @@ def check_patch_status():
 
 def patch_files():
     for i, file_name in enumerate(NECCESSARY_FILES): 
-        
-        if check_flags[i]:
+        platform = file_name.split(sep='.')[-2].lower()
+        if not platform in requested_platforms and check_flags[i]:
             continue 
 
         file_path = os.path.join(MSBUILD_VC_PATH, file_name)
@@ -143,7 +147,8 @@ def patch_files():
 
 def unptach_files():
     for i, file_name in enumerate(NECCESSARY_FILES):
-        if check_flags[i]:
+        platform = file_name.split(sep='.')[-2].lower()
+        if platform in requested_platforms and check_flags[i]:
             file_path = os.path.join(MSBUILD_VC_PATH, file_name)
             with open(file_path, mode="w+", encoding='utf-8') as f:
                 dom = xml_doms[i]
@@ -156,11 +161,9 @@ def create_directories():
     if not os.path.exists(ROOT_PATH_NAME):
         os.mkdir(ROOT_PATH_NAME)
 
-    create_dir_if_not_exists(FULL_PATHS[0])
-    platform = args.platform
-
+    create_dir_if_not_exists(FULL_PATHS[0]) 
     for path in FULL_PATHS:
-        last_part = path.split(sep=['\\', '/'])[-1]
+        last_part = path.split(sep='\\/')[-1]
         if PLATFORMS_DIRS[last_part] in requested_platforms:
             create_dir_if_not_exists(path)
     

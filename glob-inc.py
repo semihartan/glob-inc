@@ -130,8 +130,8 @@ def check_patch_status():
     global xml_doms
     global check_flags
     xml_doms = [] 
-    #              Common, Win32, x64  , ARM  , ARM64
-    check_flags = [0,  0, 0, 0, 0]
+    #              Common, Win32, x64, ARM, ARM64
+    check_flags = [0,      0,     0,   0,   0]
     check_data = [['ClCompile', 'C:\\3rdparty\\include'], ['Link', 'C:\\3rdparty\\lib\\x86'], ['Link', 'C:\\3rdparty\\lib\\x64'], ['Link', 'C:\\3rdparty\\lib\\arm'], ['Link', 'C:\\3rdparty\\lib\\arm64']]
     for i, file_name in enumerate(NECCESSARY_FILES):
         file_path = os.path.join(MSBUILD_VC_PATH, file_name)
@@ -142,11 +142,11 @@ def check_patch_status():
             xml_doms.append(dom)
             itemDefinitionGroups = dom.getElementsByTagName('ItemDefinitionGroup')
             for itemDefinitionGroup in itemDefinitionGroups:
-                for i, cd in enumerate(check_data):
-                   if check_core(itemDefinitionGroup, cd[0], cd[1]):
-                        check_flags[i] = 1
-                        break
-    return sum(check_flags) > 0
+                cd = check_data[i]
+                if check_core(itemDefinitionGroup, cd[0], cd[1]):
+                    check_flags[i] = 1
+                    break
+    return int(sum(check_flags) / 5) > 0
 
 def patch_files():
     for i, file_name in enumerate(NECCESSARY_FILES): 

@@ -177,15 +177,19 @@ def main():
 
     if args.create:
         create_directories()
-
-    if check_patch_status():
-        if args.unpatch:
+    
+    if args.unpatch:
+        if check_patch_status():
             unptach_files()
-            return
-        print("The patch is already done.")
+        else:
+            print('The MSBuild files are not patched.')
         return
-    else:
+    
+    if not check_patch_status(): 
         patch_files()
+    else:
+        print("The patch is already done.")
+        
     
 if __name__ == '__main__':
     main()

@@ -127,7 +127,7 @@ def check_patch_status():
     xml_doms = [] 
     #              Common, Win32, x64  , ARM  , ARM64
     check_flags = [0,  0, 0, 0, 0]
-    check_data = [['ClCompile', 'C:\\3rdparty\\include\\'], ['Link', 'C:\\3rdparty\\lib\\x86\\'], ['Link', 'C:\\3rdparty\\lib\\x64\\'], ['Link', 'C:\\3rdparty\\lib\\arm\\'], ['Link', 'C:\\3rdparty\\lib\\arm64\\']]
+    check_data = [['ClCompile', 'C:\\3rdparty\\include'], ['Link', 'C:\\3rdparty\\lib\\x86'], ['Link', 'C:\\3rdparty\\lib\\x64'], ['Link', 'C:\\3rdparty\\lib\\arm'], ['Link', 'C:\\3rdparty\\lib\\arm64']]
     for i, file_name in enumerate(NECCESSARY_FILES):
         file_path = os.path.join(MSBUILD_VC_PATH, file_name)
         with open(file_path, encoding='utf-8') as f:

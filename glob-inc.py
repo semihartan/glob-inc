@@ -34,6 +34,19 @@ PLATFORMS_DIRS = {
     'x86': 'win32',
 }
 
+PLATFORMS_EXTS = { 
+    'win32': 'x86-32',
+    'x86-32': 'win32',
+
+    'x64': 'x86-64',
+    'x86-64': 'x64',
+    
+    'arm': 'arm32', 
+    'arm32': 'arm',
+    
+    'arm64': 'arm64',
+}
+
 def get_requested_platforms(platform):
     platforms = PLATFORMS.copy()
     if platform.startswith('x86'):
@@ -162,7 +175,8 @@ def create_directories():
         os.mkdir(ROOT_PATH_NAME)
 
     create_dir_if_not_exists(FULL_PATHS[0]) 
-    for path in FULL_PATHS:
+    for i in range(1, len(FULL_PATHS)):
+        path = FULL_PATHS[i]
         last_part = path.replace('\\', '/').split(sep='/')[-1].lower()
         if PLATFORMS_DIRS[last_part] in requested_platforms:
             create_dir_if_not_exists(path)

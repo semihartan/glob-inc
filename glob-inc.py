@@ -18,7 +18,6 @@ SUB_DIRS = ['include\\', 'lib\\x86\\', 'lib\\x64\\', 'lib\\arm\\', 'lib\\arm64\\
 
 FULL_PATHS = []
 
-
 # Utility function to create directories if they don't exist.
 def create_dir_if_not_exists(path):
     if not os.path.exists(path):
@@ -160,7 +159,7 @@ def main():
 
     arg_parser.add_argument('-c', '--create', help="Create the directories according to the recommended structure if they doesn't exist.", action='store_true', default=False)
     
-    arg_parser.add_argument('-p', '--platform', help="The platform(s) for which the patching will be performed.", type=str, default='x86', choices=['x86', 'x86-32', 'x86-64', 'arm', 'arm32', 'arm64'])
+    arg_parser.add_argument('-p', '--platform', help="The platform(s) for which the patching will be performed.", type=str, default='all', choices=['all', 'x86', 'x86-32', 'x86-64', 'arm', 'arm32', 'arm64'])
 
     arg_parser.add_argument('-u', '--unpatch', help="Unpatch the files patched previously.", action='store_true', default=False)
     

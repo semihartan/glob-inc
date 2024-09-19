@@ -8,6 +8,8 @@ MSBUILD_VC_PATH =  "MSBuild\\Microsoft\\VC\\v170"
 
 NECCESSARY_FILES = ["Microsoft.Cpp.MSVC.Toolset.Common.props", "Microsoft.Cpp.MSVC.Toolset.Win32.props", "Microsoft.Cpp.MSVC.Toolset.x64.props", "Microsoft.Cpp.MSVC.Toolset.ARM.props", "Microsoft.Cpp.MSVC.Toolset.ARM64.props"]
 
+PLATFORMS = ['x86-32', 'x86-64', 'arm32', 'arm64']
+
 PATCH_TEMPLATES = [ 
 "<ItemDefinitionGroup><ClCompile><AdditionalIncludeDirectories>{0}</AdditionalIncludeDirectories></ClCompile></ItemDefinitionGroup>", 
 "<ItemDefinitionGroup><Link><AdditionalLibraryDirectories>{0}</AdditionalLibraryDirectories></Link></ItemDefinitionGroup>"]
@@ -17,6 +19,24 @@ ROOT_PATH_NAME = 'C:\\3rdparty\\'
 SUB_DIRS = ['include\\', 'lib\\x86\\', 'lib\\x64\\', 'lib\\arm\\', 'lib\\arm64\\' ]
 
 FULL_PATHS = []
+
+def get_requested_platforms(platform):
+    platforms = PLATFORMS.copy()
+    if platform.startswith('x86'):
+        platform.remove('arm32')
+        platform.remove('arm64')
+        if platform.endswith('64'):
+            platform.remove('x86-32')
+        if platform.endswith('32'):
+            platform.remove('x86-64')
+    elif platform.startswith('arm'):
+        platform.remove('x86-32')
+        platform.remove('x86-64')
+        if platform.endswith('64'):
+            platform.remove('arm32')
+        if platform.endswith('32'):
+            platform.remove('arm64')
+    return platforms
 
 # Utility function to create directories if they don't exist.
 def create_dir_if_not_exists(path):

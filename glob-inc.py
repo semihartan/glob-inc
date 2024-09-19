@@ -184,8 +184,8 @@ def main():
             return
         print("The patch is already done.")
         return
-    
-    patch_files()
+    else:
+        patch_files()
     
 if __name__ == '__main__':
     main()
